@@ -2,7 +2,7 @@
 ***
 Autor: Edgar Rios Linares  
 <erlinares@gmail.com>  
-Fecha: 1-1Sep-2020  
+Fecha: 11-Sep-2020  
 Versión: 1
 ***
 ## Actividad 1
