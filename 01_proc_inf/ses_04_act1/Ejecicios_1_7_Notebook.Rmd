@@ -1,0 +1,503 @@
+---
+title: "Procesamiento de Información"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+# Actividad practica medidas de información (Parte2)
+
+Autor: Edgar Rios
+
+Correo: erlinares@gmail.com
+
+
+## Actividad 1
+
+De la librería swirl de R seleccionar el curso:
+
+1: R Programming: The basics of programming in R
+
+Enseguida el subcurso:
+
+1- R programming 
+
+Practicar las 7 primeras lecciones del curso siguiendo las instrucciones interactivas.
+ 
+### 1: Basic Building Blocks
+```{r}
+5+7
+```
+Asignar variables
+```{r}
+x <- 5+7
+x
+```
+Concatenar valores
+```{r}
+z <- c(1.1, 9, 3.14)
+z
+```
+Obtener la raíz
+```{r}
+my_sqrt <- sqrt(z-1)
+my_sqrt
+```
+Sumar dos vectores, cuando el tamaño es diferente recicla los valores
+```{r}
+c(1,2,3,4) + c(0,10)  
+```
+### 2: Workspace and Files
+
+Directorio de trabajo
+```{r}
+getwd()
+```
+Crear un directorio
+```{r}
+dir.create("testdir")
+```
+Inicializa el directorio de trabajo
+```{r}
+setwd("/Users/edgarrioslinares/Documents/personales/MCDI/clases/00 - codigo/01_proc_inf/ses_04_act1")
+```
+Crear un archivo
+```{r}
+file.create("mytest.R")
+```
+### 3: Sequences of Numbers
+
+Crear secuencia de numeros
+```{r}
+1:20
+```
+Crear una secuencia con la función seq
+```{r}
+seq(1, 20)
+```
+Crear secuencia del 5 al 10, 30 números
+```{r}
+my_seq <- seq(5,10, length=30 )
+```
+Largo de un vector
+```{r}
+length(my_seq)
+```
+Crear un vector con la función rep
+```{r}
+rep(0, times=40)
+```
+Crear un vector que repote 10 veces el vector c(0,1,2)
+```{r}
+rep (c(0,1,2), times= 10)
+```
+### 4: Vectors
+
+Vectores atómicos (un tipo de dato) y listas (mutiples tipos de datos)
+
+Evaluar los datos en un vector
+```{r}
+num_vect <- c(0.5, 55, -10, 6)
+tf <- num_vect < 1
+tf
+```
+Crear un vector de 3 palabras
+```{r}
+my_char <- c("My","name","is")
+```
+Crea un vector de una sola palabra conteniendo los valores de my_char sepparado por " "
+```{r}
+paste (my_char, collapse =" ")
+```
+Crear vector concatenando y loss valore (1 al 4), separador por "-";  LETTERS - variable predefinida en R (26 letras ingles)
+```{r}
+paste (LETTERS, 1:4, sep = "-")
+```
+### 5: Missing Values
+
+Crear vector con valores NA
+```{r}
+x <- c(44, NA, 5, NA) 
+x
+```
+Crear vector con una distrbucion normal estandard
+```{r}
+y <- rnorm(1000)
+```
+Crear vecctor con 1000 tipo NA
+```{r}
+z <- rep (NA, 1000)	
+```
+Crear vector de   100 elementos combinando y, z
+```{r}
+my_data <- sample (c(y,z), 100)
+```
+Evaluar los NA dentro de my_data y contar los NA
+```{r}
+my_na <- is.na(my_data)
+sum(my_na)
+
+```
+### 6: Subsetting Vectors
+
+Crear una distrbucion normal estandard
+```{r}
+x <- rnorm(20)
+```
+Crear un subset con los primeros 10
+```{r}
+x[1:10]	
+```
+Crear vector con los NA
+```{r}
+x[is.na(x)]
+```
+Crear vector sin los NA
+```{r}
+y <- x[!is.na(x)]
+```
+Crear	vector con todos los valores positivos de y
+```{r}
+y[y > 0]
+```
+Crear vector de los elementos 3,5,7 de x
+```{r}
+x[c(3,5,7)]
+```
+Crear vector de los valores de x   menos los elementos 2 y 10
+```{r}
+x[c(-2,-10)]
+```
+Crear vector con "named element" - nombrado de elementos
+```{r}
+vect <- c(foo = 11, bar = 2, norf = NA)
+```
+Obtener vector con los nombres de vect
+```{r}
+names(vect)
+```
+### 7: Matrices and Data Frames 
+
+Crear vector del 1 al 20
+```{r}
+my_vector <- 1:20
+```
+Convertir  el vector en una tabla de dimensiones 4x5
+```{r}
+dim(my_vector) <- c(4,5)
+dim(my_vector)
+```
+Ver el tipo de vector
+```{r}
+class(my_vector)
+```
+Asignar los valores de una matriz a otra
+```{r}
+my_matrix <- my_vector
+```
+Comparar valores de  2 matrices
+```{r}
+my_matrix2 <- matrix(data = 1:20, nrow = 4, ncol = 5)
+identical(my_matrix, my_matrix2)  
+```
+Combinar  vector  patients con my_matrix
+```{r}
+patients <- c("Bill","Gina","Kelly", "Sean")   
+cbind (patients, my_matrix)
+```
+
+Crear un objeto data.frame, combinando dos vectores
+```{r}
+my_data <- data.frame(patients, my_matrix)
+my_data
+```
+Asignar nombres a las columnas del data.frame my_data, mediante un vector
+```{r}
+cnames <- c("patient","age","weight","bp","rating","test")
+colnames(my_data) <- cnames
+my_data
+```
+
+## Actividad 2
+
+En esta sección introduciremos librerias de r para el procesamiento de texto. Se generaran diferentes matrices de término-documento, cada una de ellas con diferentes medidas para posteriormente hacer la comparación en la segunda actividad.
+
+Los datos para este ejercicio corresponden a una muestra de los comentarios que se extrajeron de la tabla “Comments”, a través de Stack Exchange Data Explorer, la información pertenece a la red de Stack Exchange que consta de 133 comunidades de preguntas y respuestas, incluido Stack Overflow, la comunidad en línea más grande y confiable para que los desarrolladores aprendan, compartan sus conocimientos y desarrollen sus carreras.
+
+La información fue descargada en el archivo csv denominado ‘’QueryResults.csv” y se encuentra adjunto en las actividades asociadas a esta sección. En la preparación de documentos se realiza la importación de datos y generación de documentos
+
+
+### 1- Importación de librerias
+
+```{r}
+library(cluster) 
+
+library(tm) 
+
+library(RSpectra) 
+
+library(gplots) 
+```
+
+### 2- Explorar y fijar directorio donde se tiene alojado el archivo QueryResults.csv depositado en la activdad asociada a la sección para que lo descarguen en algún directorio local de su computadora
+
+Explorar la ubicación donde se encuentra su directorio raiz en r studio con el siguiente comando
+```{r}
+getwd() 
+```
+Establecer la dirección donde tienen alojado el archivo .csv, con el comando setwd
+```{r}
+setwd("/Users/edgarrioslinares/Documents/personales/MCDI/clases/00 - codigo/01_proc_inf/ses_04_act1")
+```
+### #3.1 Preparación de documentos
+
+La información fue descargada en el archivo csv denominado ‘’QueryResults.csv”. En la preparación de documentos se realiza la importación de datos y generación de documentos
+
+#### Importar datos
+```{r}
+File <- read.csv(file="QueryResults.csv", header=TRUE, stringsAsFactors=FALSE)
+```
+Para conocer un poco de la estructura de la información, se ejecuta el comando summary
+```{r}
+summary(File)
+```
+#### Generar documentos en una nueva carpeta con el nombre StackExchangeQuery
+
+Para generar los documentos se ejecuta un ciclo el cual se crean 10,000 archivos, cada uno contiene el campo “Text”, correspondiente a cada comentario.
+```{r}
+dir.create("StackExchangeQuery")
+setwd(dir='/Users/edgarrioslinares/Documents/personales/MCDI/clases/00 - codigo/01_proc_inf/ses_04_act1/StackExchangeQuery') 
+for (i in 1:10001) { {cat(File$Text[i],file=paste0(i,".txt"))} }
+```
+### 3.2 Procesamiento de la información
+
+Durante el procesamiento de la información se crea el Corpus y se pre procesa la información, para eliminar el ruido del Corpus.
+
+#### Crear el Corpus
+```{r}
+doc_source <- DirSource('/Users/edgarrioslinares/Documents/personales/MCDI/clases/00 - codigo/01_proc_inf/ses_04_act1/StackExchangeQuery') 
+
+doc_source[1:5] 
+
+raw_corpus <- VCorpus(doc_source, readerControl=list(language='en'))
+
+inspect(raw_corpus)
+
+```
+### Pre - procesamiento del texto
+
+El preprocesamiento tiene el propósito de normalizar las palabras y consiste en una serie de transformaciones como: convertir a minúsculas, eliminar caracteres especiales, eliminar números, eliminar stopwords, lematización, stemming, entre otras.
+```{r}
+clean_corpus <- tm_map(raw_corpus, content_transformer(tolower)) 
+
+lean_corpus <- tm_map(clean_corpus, content_transformer(removePunctuation))
+
+clean_corpus <- tm_map(clean_corpus, content_transformer(removeNumbers)) 
+
+clean_corpus <- tm_map(clean_corpus, content_transformer(removeWords), tm::stopwords('en')) 
+
+clean_corpus <- tm_map(clean_corpus, content_transformer(stripWhitespace))
+
+clean_corpus <- tm_map(clean_corpus, stemDocument)
+
+strwrap(clean_corpus[[1]])
+
+```
+Una vez que los datos se han pre procesado, visualizaremos las palabras a través de un gráfico wordcloud.
+```{r}
+tdm_ini <- TermDocumentMatrix(clean_corpus, control = list(bounds = list(global = c(10, Inf)))) 
+
+inspect(tdm_ini[1:10, 1:5]) 
+
+freq_corpus = data.frame(sort(rowSums(as.matrix(tdm_ini)), decreasing=TRUE)) 
+```
+Observar las palabras más frecuentes en el documento
+```{r}
+freq_corpus[1:10,1] 
+```
+####  Extraer los 10 términos más relevantes  basados solo en frecuencia de palabras (Frecuencia)
+
+```{r}
+head(freq_corpus, 10)
+```
+### 4- Generación de matriz término-documento con el modelo TF/IDF
+
+Através del modelo TF-IDF, se expresa cuán relevante es una palabra para un documento en una colección.  El valor tf-idf crece en relación  al número de veces que una palabra ocurre en un documento, pero disminuye a medida  de la ocurrencia de la palabra en la colección de documentos se incrementa. Entonces palabras con una gran ocurrencia en un documento y de igual forma gran ocurrencia en la colección de documentos perderan relevancia.
+
+Partiendo del mismo Corpus “clean_corpus”, generaremos la matriz ponderada TF-IDF a través de la función TermDocumentMatrix, configurando la opción de ponderar utilizando la función TF-IDF, cuya formula es: 
+
+$W_{i,j}= tf_{i,j}xlog\frac{n}{df_i}$
+
+$tf_{i,j}$   Frecuencia del término: número de veces que la palabra i aparace en el documento j
+
+$df_{i}$   Frecuencia global: número de documentos que contienen la palabra i
+
+$n$     Número de documentos del corpus
+
+
+Generación de la matriz tf/idf
+```{r}
+tdm_tfidf <- TermDocumentMatrix(clean_corpus, control=list(weighting = function(x) weightTfIdf(x, normalize = FALSE), bounds=list(global=c(10,Inf)))) 
+
+tdm_tfidf 
+
+inspect(tdm_tfidf[1:10, 1:5])
+
+findFreqTerms(tdm_tfidf, 1000)
+```
+Aplicaremos la función sparseMatrix, que permite el manejo eficiente de recursos como tiempo de cálculo y espacio.
+```{r}
+sparse_tdm_tfidf <- Matrix::sparseMatrix(i = tdm_tfidf$i, j = tdm_tfidf$j, x = tdm_tfidf$v, dims = c(tdm_tfidf$nrow,tdm_tfidf$ncol)) 
+
+sparse_tdm_tfidf[1:10, 1:5]
+
+dimnames(sparse_tdm_tfidf) <- dimnames(tdm_tfidf) 
+
+sparse_tdm_tfidf[1:10, 1:5]
+
+freq_tfidf = data.frame(sort(rowSums(as.matrix(sparse_tdm_tfidf)), decreasing=TRUE)) 
+```
+Las palabras más relevantes según tf/idf
+```{r}
+freq_tfidf[1:10,1]
+```
+#### Ver los 10 terminos más sobresalientes de la matriz tf/idf (TF/IDF)
+```{r}
+head(freq_tfidf, 10)
+```
+### Generación de matriz término-documento con el modelo de entropia
+
+La matriz de término documento generalmente se transforma utilizando las llamadas funciones de peso. por lo tanto, cada entrada de la matriz debería der una mejor aproximación de las interrelaciones entre términos y documentos. Es conveniente expresar la transformación como un producto de dos números: funciones de pero locales y globales: $W_{i,j}=L_{i,j}*G_i$. La función de peso local $L_{i,j}$ presenta el peso del término $i$ en el documento $j$. La función de peso global $G_i$se utiliza para expresar el peso del término $i$ en todo el conjunto de documentos.
+
+Para ponderar la matriz término documento utilizando una función de entropía se utilizará la siguiente fórmula:
+
+$1 + \sum_{i=documento}^{corpus} \frac {\frac{tf_{i,j}}{gf_i}xlog_2(\frac{tf_{i,j}}{gf_i})} {log_2(n)}$
+
+Donde:
+
+$tf_{i,j}$  Frecuencia del término, número de veces que la palabra $i$ aparece en el documento $j$
+ 
+${gf_i}$   Frecuencia global, número de veces que la palabra aparece en todos los documentos
+
+$n$   Número de documentos del Corpus
+
+La matriz se creará descartando las palabras con una frecuencia menor a 10, esto con la finalidad de disminuir el tamaño de la matriz, dado que estos términos poco frecuentes agregaran poco valor.
+```{r}
+tdm_entropy <- TermDocumentMatrix(clean_corpus, control = list(bounds = list(global = c(10, Inf)))) 
+
+inspect(tdm_entropy[1:10, 1:5])
+
+findFreqTerms(tdm_entropy, 1000)
+```
+Las matrices término documento tienden a ser muy grandes, pero también muy escasas (la mayoría de las celdas contienen 0). Esto se debe a que cada documento generalmente contiene solo un pequeño número de todas las palabras posibles. Así que, para grandes Corpus, lo recomendable es aplicar la función sparseMatrix,que permite el manejo eficiente de recursos en términos de tiempo de cálculo y espacio.
+```{r}
+sparse_tdm_entropy <- Matrix::sparseMatrix(i = tdm_entropy$i, j = tdm_entropy$j, x = tdm_entropy$v, dims = c(tdm_entropy$nrow,tdm_entropy$ncol))
+
+sparse_tdm_entropy[1:10, 1:5]
+
+dimnames(sparse_tdm_entropy) <- dimnames(tdm_entropy) 
+
+sparse_tdm_entropy[1:10, 1:5]
+
+```
+Ponderar la matriz término-documento
+
+La matriz de término documento generalmente se transforma utilizando las llamadas funciones de peso. 
+
+Por lo tanto, cada entrada de la matriz debería ser una mejor aproximación de las interrelaciones entre términos 
+
+Función local de entropía 
+```{r}
+weight_local_entropy <- sparse_tdm_entropy
+
+weight_local_entropy@x <- vapply(sparse_tdm_entropy@x, function(x) log2(x+.00001), numeric(1))
+
+weight_local_entropy[1:10, 1:5]
+
+```
+Función global de entropía
+
+La dimensión de matriz dispersa sparse_tdm_entropy corresponde al número de documentos del Corpus, por lo que aplicando el log2(10000) = 13.28786
+```{r}
+dim_docto <- dim(sparse_tdm_entropy)[[2]] 
+
+log2n <- log2(dim_docto) 
+
+log2n
+
+```
+Para obtener la frecuencia global, que es la suma del número de veces que la palabra aparece en todos los documentos, se ejecuta:
+
+```{r}
+gf <- Matrix::rowSums(sparse_tdm_entropy)
+
+names(gf) <- dimnames(sparse_tdm_entropy)$Terms 
+
+gf[1:10]
+
+```
+
+La siguiente función calcula parcialmente el valor de la entropía
+```{r}
+tfgf <- function(tf,gf) {
+
+p <- tf/gf
+
+return((p*log2(p))/log2n)
+
+}
+```
+Finalmente calculamos la entropía global de la matriz dispersa término documento.
+```{r}
+weight_global_entropy <- numeric(dim(sparse_tdm_entropy)[[1]]) 
+
+names(weight_global_entropy) <- dimnames(sparse_tdm_entropy)$Terms 
+
+length(weight_global_entropy) 
+
+weight_global_entropy[1:10]
+
+for(i in 1:dim(sparse_tdm_entropy)[[1]]){ 
+
+  word_row <- sparse_tdm_entropy[i,] 
+
+  non_zero_freq <- word_row[which(word_row>0)] 
+
+  weight_global_entropy[i] <- 1.0 + sum(mapply(tfgf, non_zero_freq, gf=gf[i]))
+
+  } 
+
+length(weight_global_entropy) 
+
+weight_global_entropy[1:10]
+
+```
+### Ponderación entropía local x entropía global
+
+La ponderación de la matriz dispersa término documento, se obtendrá al multiplicar la matriz de entropía local por la matriz de entropía global.
+
+#### Ver los 10 términos más sobresalientes de la ponderación de entropía (ENTROPÍA)
+```{r}
+weighted_tdm_entropy <- sweep(weight_local_entropy, 1, weight_global_entropy, '*') 
+
+weighted_tdm_entropy[1:10, 1:5]
+
+
+
+freq_entropy = data.frame(sort(rowSums(as.matrix(weighted_tdm_entropy)), decreasing=TRUE))
+
+freq_entropy[1:10,1] 
+
+head(freq_entropy, 10)
+
+```
+
+En esta actividad se van a comparar los resultados de las 3 diferentes matrices término-documento generadas.
+
+Específicamente, obtener las primeras 10 palabras en score para cada matriz y comparar los resultados, discutir por ejemplo que matrices se parecen más entre sí y cual consideran revela información más relevante y por qué.
+
+### Análisis
+
+Específicamente, obtener las primeras 10 palabras en score para cada matriz y comparar los resultados, discutir por ejemplo que matrices se parecen más entre sí de acuerdo a su coincidencia en las top 10 palabras y cual consideran revela información más relevante y por qué. Entregar la comparación de las tablas con los 10 primeras palabras para cada una de las 3 matrices término-documento y agregar la descripción y discución de los resultados en un pdf.
+
+
