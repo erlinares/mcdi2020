@@ -1,9 +1,9 @@
 ---
 title: "Procesamiento de Información"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 # Actividad practica medidas de información (Parte2)
 
@@ -11,6 +11,9 @@ Autor: Edgar Rios
 
 Correo: erlinares@gmail.com
 
+Fecha: 15-Sep-2020  
+
+Versión: 1.0
 
 ## Actividad 1
 
@@ -109,7 +112,7 @@ Crea un vector de una sola palabra conteniendo los valores de my_char sepparado 
 ```{r}
 paste (my_char, collapse =" ")
 ```
-Crear vector concatenando y loss valore (1 al 4), separador por "-";  LETTERS - variable predefinida en R (26 letras ingles)
+Crear vector concatenando y los valores (1 al 4), separador por "-";  LETTERS - variable predefinida en R (26 letras inglés)
 ```{r}
 paste (LETTERS, 1:4, sep = "-")
 ```
@@ -120,7 +123,7 @@ Crear vector con valores NA
 x <- c(44, NA, 5, NA) 
 x
 ```
-Crear vector con una distrbucion normal estandard
+Crear vector con una distribución normal estandard
 ```{r}
 y <- rnorm(1000)
 ```
@@ -140,7 +143,7 @@ sum(my_na)
 ```
 ### 6: Subsetting Vectors
 
-Crear una distrbucion normal estandard
+Crear una distribución normal estandard
 ```{r}
 x <- rnorm(20)
 ```
@@ -220,14 +223,14 @@ my_data
 
 ## Actividad 2
 
-En esta sección introduciremos librerias de r para el procesamiento de texto. Se generaran diferentes matrices de término-documento, cada una de ellas con diferentes medidas para posteriormente hacer la comparación en la segunda actividad.
+En esta sección introduciremos librerías de r para el procesamiento de texto. Se generarán diferentes matrices de término-documento, cada una de ellas con diferentes medidas para posteriormente hacer la comparación en la segunda actividad.
 
 Los datos para este ejercicio corresponden a una muestra de los comentarios que se extrajeron de la tabla “Comments”, a través de Stack Exchange Data Explorer, la información pertenece a la red de Stack Exchange que consta de 133 comunidades de preguntas y respuestas, incluido Stack Overflow, la comunidad en línea más grande y confiable para que los desarrolladores aprendan, compartan sus conocimientos y desarrollen sus carreras.
 
-La información fue descargada en el archivo csv denominado ‘’QueryResults.csv” y se encuentra adjunto en las actividades asociadas a esta sección. En la preparación de documentos se realiza la importación de datos y generación de documentos
+La información fue descargada en el archivo csv denominado "QueryResults.csv" y se encuentra adjunto en las actividades asociadas a esta sección. En la preparación de documentos se realiza la importación de datos y generación de documentos
 
 
-### 1- Importación de librerias
+### 1- Importación de librerías
 
 ```{r}
 library(cluster) 
@@ -249,11 +252,12 @@ Establecer la dirección donde tienen alojado el archivo .csv, con el comando se
 ```{r}
 setwd("/Users/edgarrioslinares/Documents/personales/MCDI/clases/00 - codigo/01_proc_inf/ses_04_act1")
 ```
-### #3.1 Preparación de documentos
+### 3.1 Preparación de documentos
 
-La información fue descargada en el archivo csv denominado ‘’QueryResults.csv”. En la preparación de documentos se realiza la importación de datos y generación de documentos
+La información fue descargada en el archivo csv denominado "QueryResults.csv". En la preparación de documentos se realiza la importación de datos y generación de documentos
 
 #### Importar datos
+
 ```{r}
 File <- read.csv(file="QueryResults.csv", header=TRUE, stringsAsFactors=FALSE)
 ```
@@ -262,6 +266,7 @@ Para conocer un poco de la estructura de la información, se ejecuta el comando 
 summary(File)
 ```
 #### Generar documentos en una nueva carpeta con el nombre StackExchangeQuery
+
 
 Para generar los documentos se ejecuta un ciclo el cual se crean 10,000 archivos, cada uno contiene el campo “Text”, correspondiente a cada comentario.
 ```{r}
@@ -274,6 +279,9 @@ for (i in 1:10001) { {cat(File$Text[i],file=paste0(i,".txt"))} }
 Durante el procesamiento de la información se crea el Corpus y se pre procesa la información, para eliminar el ruido del Corpus.
 
 #### Crear el Corpus
+
+
+Se cambió la inspección del corpus para poder verlo mejor  de inspect(raw_corpus), sólo se muestra la inspección de los primeros 5 elementos
 ```{r}
 doc_source <- DirSource('/Users/edgarrioslinares/Documents/personales/MCDI/clases/00 - codigo/01_proc_inf/ses_04_act1/StackExchangeQuery') 
 
@@ -281,7 +289,7 @@ doc_source[1:5]
 
 raw_corpus <- VCorpus(doc_source, readerControl=list(language='en'))
 
-inspect(raw_corpus)
+inspect(raw_corpus[1:5])
 
 ```
 ### Pre - procesamiento del texto
@@ -362,12 +370,13 @@ Las palabras más relevantes según tf/idf
 freq_tfidf[1:10,1]
 ```
 #### Ver los 10 terminos más sobresalientes de la matriz tf/idf (TF/IDF)
+
 ```{r}
 head(freq_tfidf, 10)
 ```
-### Generación de matriz término-documento con el modelo de entropia
+### 5- Generación de matriz término-documento con el modelo de entropia
 
-La matriz de término documento generalmente se transforma utilizando las llamadas funciones de peso. por lo tanto, cada entrada de la matriz debería der una mejor aproximación de las interrelaciones entre términos y documentos. Es conveniente expresar la transformación como un producto de dos números: funciones de pero locales y globales: $W_{i,j}=L_{i,j}*G_i$. La función de peso local $L_{i,j}$ presenta el peso del término $i$ en el documento $j$. La función de peso global $G_i$se utiliza para expresar el peso del término $i$ en todo el conjunto de documentos.
+La matriz de término documento generalmente se transforma utilizando las llamadas funciones de peso. por lo tanto, cada entrada de la matriz debería dar una mejor aproximación de las interrelaciones entre términos y documentos. Es conveniente expresar la transformación como un producto de dos números: funciones de peso locales y globales: $W_{i,j}=L_{i,j}*G_i$. La función de peso local $L_{i,j}$ presenta el peso del término $i$ en el documento $j$. La función de peso global $G_i$se utiliza para expresar el peso del término $i$ en todo el conjunto de documentos.
 
 Para ponderar la matriz término documento utilizando una función de entropía se utilizará la siguiente fórmula:
 
@@ -477,6 +486,7 @@ weight_global_entropy[1:10]
 La ponderación de la matriz dispersa término documento, se obtendrá al multiplicar la matriz de entropía local por la matriz de entropía global.
 
 #### Ver los 10 términos más sobresalientes de la ponderación de entropía (ENTROPÍA)
+
 ```{r}
 weighted_tdm_entropy <- sweep(weight_local_entropy, 1, weight_global_entropy, '*') 
 
@@ -498,6 +508,29 @@ Específicamente, obtener las primeras 10 palabras en score para cada matriz y c
 
 ### Análisis
 
-Específicamente, obtener las primeras 10 palabras en score para cada matriz y comparar los resultados, discutir por ejemplo que matrices se parecen más entre sí de acuerdo a su coincidencia en las top 10 palabras y cual consideran revela información más relevante y por qué. Entregar la comparación de las tablas con los 10 primeras palabras para cada una de las 3 matrices término-documento y agregar la descripción y discución de los resultados en un pdf.
+Las tablas de Frecuencia y TF/IDF son las que más se parecen (considerando el top 10), contienen los mismos términos aunque con un orden un poco distinto. La tabla de Frecuencia nos indica el número de veces que aparece un término dentro de un corpus, mientras que el TF/IDF lo que hace es calcular la frecuencia del término pero con relación al documento, entre más veces aparezca en un documento y tenga más ocurrrencia en el corpus perderá reelevancia.
+
+La tabla de Entropia en su top 10, contiene algunos términos que no aparecen en las tablas de Frecuencia y de TF/IDF, ya que usa funciones de peso, lo cual mejora la aproximación de las interrelaciones entre términos
+
+Considero que la tabla de Entropia revela información más relevante, ya que los términos con menor probabilidad de que aparezcan aportan mayor información.
+
+#### Hallazgos
+
+Fue necesario instalar los siguientes paquetes para poder importar las librerías requeridas:
+
+- install.packages(c("tm", "RSpectra", "gplots", "SnowballC"))
+
+
+#### Método de trabajo
+
+- Se creó un R Notebook para poder intercalar la documentación, con código R y así mismo usar LaTex para representar las fórmulas.
+
+          tinytex::install_tinytex()
+
+- Código Disponible en:  [gitHub] (https://github.com/erlinares/mcdi2020/tree/master/01_proc_inf/ses_04_act1)
+
+
+
+
 
 
