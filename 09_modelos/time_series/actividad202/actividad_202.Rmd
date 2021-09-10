@@ -1,0 +1,94 @@
+---
+Materia: Modelos Avanzados en Ciencia de Datos
+Profesor: Dr. Juliho Castillo Colmenares
+Alumno: Edgar Rios Linares
+
+Actividad: 
+1. Analiza el capítulo 2 de nuestro libro de texto. 
+    https://otexts.com/fpp3/graphics.html#graphics
+2. Descarga el archivo international-tourism-...csv
+    https://ourworldindata.org/grapher/international-tourism-number-of-arrivals?tab=chart&country=~MEX
+3. Calcula el máximo de arribos internacionales anuales por país
+4. Determina los cinco países con el indicador anterior más alto y el año en que este ocurrió.
+---
+
+Cargamos las librerías
+```{r}
+library(tidyverse)
+```
+
+
+Leemos los datos
+*Nota: Del archivo original se modifico la columna "International tourism, number of arrivals" 
+por "Arrivals" para un manejo más sencillo en las operaciones del dataframe
+```{r}
+data_tourism <- read.csv("international-tourism-number-of-arrivals.csv")
+```
+
+Revisamos los datos
+```{r}
+head(data_tourism)
+```
+Filtramos los registros donde "Code" es nulo
+Guardamos el resultado en arrivals_country_year
+```{r}
+arrivals_country_year <- data_tourism %>%
+  filter(Code != "" )
+```
+
+Filtramos los registros donde "Entity" es igual a "World"
+Agrupamos por "Entity" (país)
+Agregamos "my_ranks" para clasificar por "Entity" y "Arrivals" (país y número de arribos)
+Se obtiene una clasificación por cada país y sus números de arribos.
+Se realiza una división para pasar a millones los arribos "TotalArrivals"
+```{r}
+arrivals_country_year <- arrivals_country_year %>%
+  filter(Entity!='World') %>%
+  group_by(Entity) %>%
+  mutate(TotalArrivals = Arrivals / 1e6)  %>%
+  mutate(my_ranks =  order (order(Arrivals, decreasing=TRUE)) )  
+```
+
+Revisamos los datos.
+Por cada pais se tiene una clasificación "my_ranks" de los arribos "Arrivals"(de manera descendente)
+Cada país tiene una clasificación del 1 hasta N, considerando el número de Arribos "Arrivals"
+1 representa el año con mayor arribos, 2 el segundo registro con más arribos y así sucesivamente
+```{r}
+arrivals_country_year
+```
+
+Seleccionamos los registros donde "my_ranks" es igual a 1.
+```{r}
+arrivals_country_year <- arrivals_country_year %>%
+  filter(my_ranks == 1) 
+```
+
+Revisamos los datos
+Y observamos que sólo tenemos los registros de cada país (Entity) del año(year) 
+en donde tuvo la mayor cantidad de arribos (Arrivals)
+```{r}
+arrivals_country_year
+```
+Ordenamos de forma descendente los arribos (Arrivals) para obtener los países (Entity) con el año(Year) en donde
+tuvieron más arribos (Arrivals)
+```{r}
+arrivals_country_year[order(arrivals_country_year$Arrivals, decreasing = TRUE),] -> arrivals_country_year_order
+```
+
+Revisamos los datos
+```{r}
+arrivals_country_year_order
+```
+Generamos el daataframe con las respuestas requeridas
+Codigo del país (Code), Número máximo de arribos anuales(TotalArrivals),  Año de Ocurrencia(Year)
+"Entity" se debe agregar para que R no genere error
+```{r}
+arrivals_country_year_order <- arrivals_country_year_order %>% 
+  select(Entity, Code, TotalArrivals, Year)
+```
+
+Revisamos los datos con nuestra respuesta
+```{r}
+head(arrivals_country_year_order, n=5)
+```
+
