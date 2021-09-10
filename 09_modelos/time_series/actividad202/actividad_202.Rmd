@@ -1,16 +1,30 @@
 ---
+title: "Series de Tiempo - Actividad 202"
+author: "Edgar Rios"
+date: "9/10/2021"
+output: pdf_document
+---
 Materia: Modelos Avanzados en Ciencia de Datos
+
 Profesor: Dr. Juliho Castillo Colmenares
+
 Alumno: Edgar Rios Linares
 
 Actividad: 
+
 1. Analiza el capítulo 2 de nuestro libro de texto. 
     https://otexts.com/fpp3/graphics.html#graphics
+    
 2. Descarga el archivo international-tourism-...csv
     https://ourworldindata.org/grapher/international-tourism-number-of-arrivals?tab=chart&country=~MEX
+    
 3. Calcula el máximo de arribos internacionales anuales por país
+
 4. Determina los cinco países con el indicador anterior más alto y el año en que este ocurrió.
----
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 Cargamos las librerías
 ```{r}
